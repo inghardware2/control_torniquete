@@ -3,19 +3,16 @@ import serial
 import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 
-
 portS = serial.Serial('/dev/ttySAC0',9600)
-
-tag = str('150007F7AE4B')
 
 while True:
      ID = ""
-     read_byte = portS.read()
-  
-     if read_byte=="\x02":
+     tag = portS.read()  
+     if tag=="\x02":
          for Counter in range(12):
- 		    read_byte=portS.read()
-		    ID = ID + str(read_byte)
-	 if ID == tag:
-		print "Access true"
-         
+ 		    tag=portS.read()
+		    if (Counter > 9):
+			   i= int(ID,16)
+			   print i
+		    elif (Counter >3):
+			    ID = ID + str(tag)	 

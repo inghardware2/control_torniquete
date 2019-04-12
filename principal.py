@@ -38,7 +38,7 @@ def buzzer_active():
 def show_lcd(a):
 	if a == 0:
 	 lcd.lcd_clear() 
-	 lcd.lcd_display_string("DENEGADO",1,6)
+	 lcd.lcd_display_string("DENEGADO",2,6)
 	
 	elif a == 1:
 	 lcd.lcd_display_string("BIENVENIDO",2,5)
@@ -54,13 +54,13 @@ def show_lcd(a):
 #access deneid
 if int(sys.argv[1]) == 0:
 	show_lcd(0)
-	if len(sys.argv[4]) > 0:
-		c = (20 - len(sys.argv[4])) / 2
-		for elements in sys.argv[4]:				
-			lcd.lcd_display_string(elements,3,c)	
-			c=c+1
-	buzzer_active()		
-	time.sleep(1)          
+	buzzer_active()	
+	# ~ if len(sys.argv[4]) > 0:
+		# ~ c = (20 - len(sys.argv[4])) / 2
+		# ~ for elements in sys.argv[4]:				
+			# ~ lcd.lcd_display_string(elements,3,c)	
+			# ~ c=c+1
+		          
     
 #access grented 
 if int(sys.argv[1]) == 1:
