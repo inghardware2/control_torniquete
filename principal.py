@@ -1,117 +1,90 @@
 import I2C_LCD_driver
+import statusIndicator
 from datetime import datetime
-
 import RPi.GPIO as GPIO
-
 import time
 import sys
 
+#configuración de pines
 buzzer = 17
 relayIN = 27
 relayOUT = 15
 
+#configuración de puerto
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
+
+#estados iniciales
 GPIO.setup(buzzer,GPIO.OUT)
 GPIO.output(buzzer,GPIO.LOW)
-
 GPIO.setup(relayIN,GPIO.OUT)
 GPIO.output(relayIN,GPIO.LOW)
-
 GPIO.setup(relayOUT,GPIO.OUT)
 GPIO.output(relayOUT,GPIO.LOW)
 
+#declaración de clases
 lcd = I2C_LCD_driver.lcd()
+stateServices = statusIndicator.status() 
 
-customC = [
-        #error
-        [ 0b00000,
-          0b11011,
-          0b01110,
-          0b00100,
-          0b01110,
-          0b11011,
-          0b00000,
-          0b00000 ],
-        #chulito
-        [ 0b00000,
-          0b00001,
-          0b00011,
-          0b10110,
-          0b11100,
-          0b01000,
-          0b00000,
-          0b00000 ],
-]
-
-def iconStatusInternet(i):
-    lcd.lcd_display_string("I",1,15)
-    if i == 0: #indicador false
-        lcd.lcd_load_custom_chars(customC)
-        lcd.lcd_write(144)
-        lcd.lcd_write_char(0)
-    elif i == 1: #indicador true
-        lcd.lcd_load_custom_chars(customC)
-        lcd.lcd_write(144)
-        lcd.lcd_write_char(1)
-
-def iconStatusServer(i):
-    lcd.lcd_display_string("S",1,18)
-    if i == 0: #indicador false
-        lcd.lcd_load_custom_chars(customC)
-        lcd.lcd_write(147)
-        lcd.lcd_write_char(0)
-    elif i == 1: #indicador true
-        lcd.lcd_load_custom_chars(customC)
-        lcd.lcd_write(147)
-        lcd.lcd_write_char(1)
-
+#función que define la activación y tiempo del buzzer
+def buzzer_active():
+	for x in range(3):
+		GPIO.output(buzzer,GPIO.HIGH)
+		time.sleep(0.3)
+		GPIO.output(buzzer,GPIO.LOW)
+		time.sleep(0.1)
+        
+#función de mensajes preestablecidos
+def show_lcd(a):
+	if a == 0:
+	 lcd.lcd_clear() 
+	 lcd.lcd_display_string("DENEGADO",1,6)
+	
+	elif a == 1:
+	 #lcd.lcd_clear()
+	 lcd.lcd_display_string("BIENVENIDO",2,5)
+	 timeString = datetime.now().strftime('%H:%M:%S')
+	 lcd.lcd_display_string(timeString,3,6)
+		
+	elif a == 2:
+	 lcd.lcd_clear()    
+	 dateString = datetime.now().strftime('%d/%m/%y')
+	 lcd.lcd_display_string(dateString, 1,0)
+	 lcd.lcd_display_string("COLOQUE SU HUELLA",3,1)
+     
+#Acceso denegado muestro emnsaje de error
 if int(sys.argv[1]) == 0:
-    #lcd.lcd_clear() 
-	lcd.lcd_display_string("DENEGADO",3,6)
-	GPIO.output(buzzer,GPIO.HIGH)
-	time.sleep(0.3)
-	GPIO.output(buzzer,GPIO.LOW)
-	time.sleep(0.1)
-	GPIO.output(buzzer,GPIO.HIGH)
-	time.sleep(0.3)
-	GPIO.output(buzzer,GPIO.LOW)
-	time.sleep(0.1)
-	GPIO.output(buzzer,GPIO.HIGH)
-	time.sleep(0.25)
-	GPIO.output(buzzer,GPIO.LOW)
-	time.sleep(0.2)
-          
+	show_lcd(0)
+	if len(sys.argv[4]) > 0:
+		c = (20 - len(sys.argv[4])) / 2
+		for elements in sys.argv[4]:				
+			lcd.lcd_display_string(elements,3,c)	
+			c=c+1
+	buzzer_active()		
+	time.sleep(1)          
+    
+#Acceso concedido, habilito torniquete    
 if int(sys.argv[1]) == 1:
-        #lcd.lcd_clear()
-        lcd.lcd_display_string("BIENVENIDO",2,5)
-        timeString = datetime.now().strftime('%H:%M:%S')
-        lcd.lcd_display_string(timeString,3,6)
+        show_lcd(1)
         GPIO.output(relayIN,GPIO.HIGH)
         time.sleep(1)
-        GPIO.output(relayIN,GPIO.LOW)     
-
-        
+        GPIO.output(relayIN,GPIO.LOW) 
+            
+#tiempo de regreso      
 time.sleep(1)
 
-lcd.lcd_clear()
-dateString = datetime.now().strftime('%d/%m/%y')
-lcd.lcd_display_string(dateString, 1,0)
-lcd.lcd_display_string("COLOQUE SU HUELLA",3,1)
+#mensaje inicial
+show_lcd(2)
 
+#estado de los indicadores de internet y servidor
 if int(sys.argv[2]) == 0:
-	iconStatusInternet(0)  
+	stateServices.Internet(0)  
 elif int(sys.argv[2]) == 1:
-	iconStatusInternet(1)   
-
+	stateServices.Internet(1)   
+    
 if int(sys.argv[3]) == 0:
-	iconStatusServer(0)  
+	stateServices.Server(0)  
 elif int(sys.argv[3]) == 1:
-	iconStatusServer(1)   
-	
-#iconStatusInternet(1)
-#iconStatusServer(1)
-
-#time.sleep(1)
-
-
+	stateServices.Server(1)   
+    
+    
