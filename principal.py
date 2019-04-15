@@ -19,8 +19,6 @@ GPIO.setup(buzzer,GPIO.OUT)
 GPIO.output(buzzer,GPIO.LOW)
 GPIO.setup(relayIN,GPIO.OUT)
 GPIO.output(relayIN,GPIO.LOW)
-GPIO.setup(relayOUT,GPIO.OUT)
-GPIO.output(relayOUT,GPIO.LOW)
 
 #object statement
 lcd = I2C_LCD_driver.lcd()
@@ -39,8 +37,11 @@ def show_lcd(a):
 	if a == 0:
 	 lcd.lcd_clear() 
 	 lcd.lcd_display_string("DENEGADO",2,6)
+	 timeString = datetime.now().strftime('%H:%M:%S')
+	 lcd.lcd_display_string(timeString,3,6)
 	
 	elif a == 1:
+	 lcd.lcd_clear() 
 	 lcd.lcd_display_string("BIENVENIDO",2,5)
 	 timeString = datetime.now().strftime('%H:%M:%S')
 	 lcd.lcd_display_string(timeString,3,6)
@@ -55,11 +56,6 @@ def show_lcd(a):
 if int(sys.argv[1]) == 0:
 	show_lcd(0)
 	buzzer_active()	
-	# ~ if len(sys.argv[4]) > 0:
-		# ~ c = (20 - len(sys.argv[4])) / 2
-		# ~ for elements in sys.argv[4]:				
-			# ~ lcd.lcd_display_string(elements,3,c)	
-			# ~ c=c+1
 		          
     
 #access grented 
@@ -86,5 +82,4 @@ if int(sys.argv[3]) == 0:
 	stateServices.Server(0)  
 elif int(sys.argv[3]) == 1:
 	stateServices.Server(1)   
-    
-    
+GPIO.cleanup()   
