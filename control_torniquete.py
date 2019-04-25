@@ -8,7 +8,7 @@ import sys
 #pin configuration
 buzzer = 22
 relayIN = 27
-relayOUT = 15
+#relayOUT = 15
 
 #port configuration
 GPIO.setmode(GPIO.BCM)
