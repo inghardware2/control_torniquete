@@ -41,16 +41,23 @@ def show_lcd(a):
 	 lcd.lcd_display_string(timeString,3,6)
 	
 	elif a == 1:
-	 lcd.lcd_clear() 
-	 lcd.lcd_display_string("BIENVENIDO",2,5)
-	 timeString = datetime.now().strftime('%H:%M:%S')
-	 lcd.lcd_display_string(timeString,3,6)
+	 	if len(sys.argv) == 5:
+			lcd.lcd_clear() 	
+			lcd.lcd_display_string("BIENVENIDO",1,5)
+			timeString = datetime.now().strftime('%H:%M:%S')
+			lcd.lcd_display_string(timeString,2,6)
+			lcd.lcd_display_string("DIAS RESTANTES: " + sys.argv[4],4,0)
+		else:
+			lcd.lcd_clear() 	
+			lcd.lcd_display_string("BIENVENIDO",2,5)
+			timeString = datetime.now().strftime('%H:%M:%S')
+			lcd.lcd_display_string(timeString,3,6)
 		
 	elif a == 2:
-	 lcd.lcd_clear()    
-	 dateString = datetime.now().strftime('%d/%m/%y')
-	 lcd.lcd_display_string(dateString, 1,0)
-	 lcd.lcd_display_string("COLOQUE SU HUELLA",3,1)
+		lcd.lcd_clear()    
+		dateString = datetime.now().strftime('%d/%m/%y')
+		lcd.lcd_display_string(dateString, 1,0)
+		lcd.lcd_display_string("COLOQUE SU HUELLA",3,1)
      
 #access deneid
 if int(sys.argv[1]) == 0:
