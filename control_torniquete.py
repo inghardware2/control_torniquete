@@ -39,7 +39,7 @@ def show_lcd(a):
 	 lcd.lcd_display_string("DENEGADO",2,6)
 	 timeString = datetime.now().strftime('%H:%M:%S')
 	 lcd.lcd_display_string(timeString,3,6)
-	
+	 
 	elif a == 1:
 	 	if len(sys.argv) == 5:
 			lcd.lcd_clear() 	
