@@ -69,7 +69,7 @@ if int(sys.argv[1]) == 0:
 if int(sys.argv[1]) == 1:
         show_lcd(1)
         GPIO.output(relayIN,GPIO.HIGH)
-        time.sleep(3)
+        time.sleep(1)
         GPIO.output(relayIN,GPIO.LOW) 
             
 #return time     
