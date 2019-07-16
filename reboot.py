@@ -22,11 +22,11 @@ lcd = I2C_LCD_driver.lcd()
 
 lcd.lcd_clear() 
 lcd.lcd_display_string("SISTEMA",2,7)
-lcd.lcd_display_string("OFFLINE",3,7)
+lcd.lcd_display_string("REINICIANDO",3,5)
 
 GPIO.output(buzzer,GPIO.HIGH)
 
-call('halt -p', shell=True)
+call('shutdown -r now', shell=True)
 
 #active buzzer
 # def buzzer_alert():
